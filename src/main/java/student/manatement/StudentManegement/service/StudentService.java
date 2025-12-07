@@ -1,0 +1,35 @@
+package student.manatement.StudentManegement.service;
+
+import java.util.List;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import student.manatement.StudentManegement.data.Student;
+import student.manatement.StudentManegement.data.StudentsCourses;
+import student.manatement.StudentManegement.repository.StudentRepository;
+
+@Slf4j
+@Service
+public class StudentService {
+
+  private StudentRepository repository;
+
+  @Autowired
+  public StudentService(StudentRepository repository) {
+    this.repository = repository;
+  }
+
+  public List<Student> searchStudentList() {
+    return repository.search()
+        .stream().filter(student -> student.getAge() >= 30 && student.getAge() <= 39)
+        .toList();
+  }
+
+  public List<StudentsCourses> searchStudentsCoursesList() {
+    return repository.searchStudentsCourses()
+        .stream().filter(studentsCourses -> studentsCourses.getCourseName() != null &&
+            studentsCourses.getCourseName().contains("Java"))
+        .toList();
+
+  }
+}

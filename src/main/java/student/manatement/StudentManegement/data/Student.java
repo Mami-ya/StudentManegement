@@ -1,6 +1,5 @@
-package student.manatement.StudentManegement;
+package student.manatement.StudentManegement.data;
 
-import java.util.Stack;
 import lombok.Getter;
 import lombok.Setter;
 
