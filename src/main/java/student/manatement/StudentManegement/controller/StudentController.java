@@ -5,10 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
 import student.manatement.StudentManegement.controller.converter.StudentConverter;
 import student.manatement.StudentManegement.data.Student;
 import student.manatement.StudentManegement.data.StudentsCourses;
@@ -47,13 +47,19 @@ public class StudentController {
   public String newStudent(Model model) {
     StudentDetail detail = new StudentDetail();
     detail.setStudent(new Student());
-    model.addAttribute("studentDetail", new StudentDetail());
+    model.addAttribute("studentDetail",detail);
     return "registerStudent";
   }
 
   @PostMapping("/registerStudent")
-  public String registerStudent(@ModelAttribute StudentDetail studentDetail) {
-    return "";
+  public String registerStudent(@ModelAttribute StudentDetail studentDetail, BindingResult result) {
+    if(result.hasErrors()) {
+      return "registerStudent";
+    }
+    service.registerStudent(studentDetail);
+
+    System.out.println(studentDetail.getStudent().getName() + "さんが新規受講生として登録されました。" );
+    return "redirect:/studentList";
   }
 }
 
