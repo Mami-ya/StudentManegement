@@ -1,6 +1,7 @@
 package student.manatement.StudentManegement.repository;
 
 import java.util.List;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import student.manatement.StudentManegement.data.Student;
@@ -24,6 +25,15 @@ public interface StudentRepository {
 
   @Select("SELECT * FROM students_courses")
   List<StudentsCourses> searchStudentsCourses();
+
+  @Insert("""
+  INSERT INTO student
+  (student_id, name, name_kana, nickname, email, area, age, gender, remark, is_deleted)
+  VALUES
+  (#{studentId}, #{name}, #{nameKana}, #{nickName}, #{email}, #{area}, #{age}, #{gender}, #{remark}, false)
+""")
+
+  void registerStudent(Student student);
 
 
 }
