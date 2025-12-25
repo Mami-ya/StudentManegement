@@ -66,13 +66,21 @@
   <div th:each="course, stat : *{studentsCourses}">
 
     <input type="hidden"
+           th:field="*{studentsCourses[__${stat.index}__].studentId}" />
+<!--    <input type="hidden"-->
+<!--           th:field="*{studentsCourses[__${stat.index}__].coursesId}" />-->
+
+    <label for="coursesId">受講コースID：</label>
+<!--            th:for="studentCourse.__${stat.index}__.coursesId">受講コースID：</label>-->
+    <input type="text" id="coursesId"
+           th:id="studentsCourses.__${stat.index}__.coursesId"
            th:field="*{studentsCourses[__${stat.index}__].coursesId}" />
 
-    <div>
-      <label>コース名：</label>
-      <input type="text"
-             th:field="*{studentsCourses[__${stat.index}__].courseName}">
-    </div>
+    <label for="courseName"
+           th:for="studentsCourses.__${stat.index}__.courseName">受講コース名：</label>
+    <input type="text" id="courseName"
+           th:id="studentsCourses.__${stat.index}__.courseName"
+           th:field="*{studentsCourses[__${stat.index}__].courseName}" />
 
     <div>
       <label>開始日：</label>

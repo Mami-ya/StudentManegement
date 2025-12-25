@@ -31,7 +31,8 @@ public class StudentService {
     Student student = repository.searchStudentId(studentId);
 
     //取ってきた学生のコース一覧を取得
-    List<StudentsCourses> studentsCourses = repository.searchStudentsCourses(student.getStudentId());
+    List<StudentsCourses> studentsCourses = repository.searchStudentsCourses(
+        student.getStudentId());
 
     //学生情報とコースをまとめる
     StudentDetail studentDetail = new StudentDetail();
@@ -60,7 +61,8 @@ public class StudentService {
   public void updateStudent(StudentDetail studentDetail) {
     repository.updateStudent(studentDetail.getStudent());
     for (StudentsCourses studentsCourses : studentDetail.getStudentsCourses()) {
-           repository.updateStudentsCourses(studentsCourses);
+      studentsCourses.setStudentId(studentDetail.getStudent().getStudentId());
+      repository.updateStudentsCourses(studentsCourses);
     }
   }
 }
