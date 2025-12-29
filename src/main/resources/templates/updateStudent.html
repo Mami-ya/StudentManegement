@@ -2,11 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>受講生変更</title>
+  <title>受講生詳細</title>
 </head>
 <body>
 
-<h1>受講生変更録</h1>
+<h1>受講生詳細</h1>
 
 <form th:action="@{/updateStudent}"
       th:object="${studentDetail}"
@@ -67,11 +67,9 @@
 
     <input type="hidden"
            th:field="*{studentsCourses[__${stat.index}__].studentId}" />
-<!--    <input type="hidden"-->
-<!--           th:field="*{studentsCourses[__${stat.index}__].coursesId}" />-->
 
     <label for="coursesId">受講コースID：</label>
-<!--            th:for="studentCourse.__${stat.index}__.coursesId">受講コースID：</label>-->
+
     <input type="text" id="coursesId"
            th:id="studentsCourses.__${stat.index}__.coursesId"
            th:field="*{studentsCourses[__${stat.index}__].coursesId}" />
@@ -95,6 +93,13 @@
     </div>
 
     <hr>
+  </div>
+
+  <div>
+    <label>
+      <input type="checkbox" id="deleted" th:field="*{student.deleted}">
+      キャンセル
+    </label>
   </div>
 
   <button type="submit">更新</button>
