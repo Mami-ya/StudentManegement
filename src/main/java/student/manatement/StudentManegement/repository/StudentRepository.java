@@ -2,6 +2,7 @@ package student.manatement.StudentManegement.repository;
 
 import java.util.List;
 import org.apache.ibatis.annotations.Insert;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
@@ -22,11 +23,21 @@ public interface StudentRepository {
    *
    * @return　全件検索した受講生情報の一覧。
    */
-  @Select("SELECT * FROM student WHERE is_deleted = false")
+  @Select("""
+  SELECT student_id, name, name_kana, nickname, email, area, age, gender, remark, is_deleted AS deleted FROM student""")
   List<Student> search();
 
-  @Select("SELECT * FROM student WHERE student_id = #{studentId}")
+  // @Select("SELECT * FROM student")
+  //List<Student> search();
+
+  @Select("""
+  SELECT student_id, name, name_kana, nickname, email, area, age, gender, remark, is_deleted AS deleted FROM student
+  WHERE student_id = #{studentId}
+""")
   Student searchStudentId(String studentId);
+
+ // @Select("SELECT * FROM student WHERE student_id = #{studentId}")
+ // Student searchStudentId(String studentId);
 
   //コースを全件取得
   @Select("SELECT * FROM students_courses")
@@ -53,6 +64,7 @@ public interface StudentRepository {
       UPDATE student SET name = #{name}, name_kana = #{nameKana}, nickname = #{nickName}, email = #{email},
        area = #{area}, age = #{age}, gender = #{gender}, remark = #{remark}, is_deleted = #{deleted} WHERE student_id = #{studentId}""")
   void updateStudent(Student student);
+
 
   @Update("UPDATE students_courses SET course_name = #{courseName} WHERE courses_id = #{coursesId}" )
   void updateStudentsCourses(StudentsCourses studentsCourses);
