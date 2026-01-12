@@ -11,39 +11,46 @@ import student.manatement.StudentManegement.data.Student;
 import student.manatement.StudentManegement.data.StudentsCourses;
 
 /**
- * 受講生情報を扱うリポジトリ。
- * <p>
- * 全件検索や 単一条件での検索。コース情報の検索が行えるクラスです。
+ * 受講生テーブルと受講生コース情報テーブルと紐づくRepositoryです。
  */
 @Mapper
 public interface StudentRepository {
 
   /**
-   * 全件検索します。
+   * 受講生の全件検索を行います。
    *
-   * @return　全件検索した受講生情報の一覧。
+   * @return　受講生情報一覧（全件）
    */
   @Select("""
   SELECT student_id, name, name_kana, nickname, email, area, age, gender, remark, is_deleted AS deleted FROM student""")
   List<Student> search();
 
-  // @Select("SELECT * FROM student")
-  //List<Student> search();
-
+  /**
+   * 受講生の検索を行います。
+   * @param studentId　受講生ID
+   * @return　受講生
+   */
   @Select("""
   SELECT student_id, name, name_kana, nickname, email, area, age, gender, remark, is_deleted AS deleted FROM student
   WHERE student_id = #{studentId}
 """)
   Student searchStudentId(String studentId);
 
- // @Select("SELECT * FROM student WHERE student_id = #{studentId}")
- // Student searchStudentId(String studentId);
 
-  //コースを全件取得
+  /**
+   * 受講生のコース情報の全件検索を行います。
+   *
+   * @return　受講生のコース情報(全件）
+   */
   @Select("SELECT * FROM students_courses")
   List<StudentsCourses> searchStudentsCoursesList();
 
-  //1人分のコースを取得
+  /**
+   *受講生IDにに紐づく受講生コース情報を検索します。
+   *
+   * @param studentId　受講生ID
+   * @return　受講生IDに紐づく受講生コース情報
+   */
   @Select("SELECT * FROM students_courses WHERE student_id = #{studentId}")
   List<StudentsCourses> searchStudentsCourses(String studentId);
 
@@ -55,7 +62,7 @@ public interface StudentRepository {
 
   @Insert("INSERT INTO students_courses(student_id, course_name, start_date, end_date) "
       + "VALUES(#{studentId}, #{courseName}, #{startDate}, #{endDate})")
-  @Options(useGeneratedKeys = true, keyProperty = "studentId")
+  @Options(useGeneratedKeys = true, keyProperty = "coursesId")
   void registerStudentCourses(StudentsCourses studentsCourses);
 
 
