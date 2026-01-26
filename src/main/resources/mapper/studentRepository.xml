@@ -35,4 +35,89 @@
     WHERE student_id = #{studentId}
   </select>
 
+  <!-- 受講生のコース情報の全件検索 -->
+  <select id="searchStudentCourseList" resultType="student.manatement.StudentManegement.data.StudentCourse">
+    SELECT *
+    FROM
+    students_courses
+  </select>
+
+  <!-- 受講生IDに紐づく受講生コース情報の検索 -->
+  <select id="searchStudentCourse" resultType="student.manatement.StudentManegement.data.StudentCourse">
+    SELECT *
+    FROM
+    students_courses
+    WHERE student_id = #{studentId}
+  </select>
+
+  <!-- 受講生の新規登録。IDは自動採番します。 -->
+  <insert id="registerStudent"
+    parameterType="student.manatement.StudentManegement.data.Student"
+    useGeneratedKeys="true"
+    keyProperty="studentId">
+    INSERT INTO student(
+    name,
+    name_kana,
+    nickname,
+    email,
+    area,
+    age,
+    gender,
+    remark,
+    is_deleted)
+    VALUES(
+    #{name},
+    #{nameKana},
+    #{nickName},
+    #{email},
+    #{area},
+    #{age},
+    #{gender},
+    #{remark},
+    false)
+  </insert>
+
+  <!-- 受講生コース情報の新規登録。IDは自動採番します。 -->
+  <insert id="registerStudentCourse"
+    parameterType="student.manatement.StudentManegement.data.StudentCourse"
+    useGeneratedKeys="true"
+    keyProperty="coursesId">
+    INSERT INTO students_courses(
+    student_id,
+    course_name,
+    start_date,
+    end_date)
+    VALUES(
+    #{studentId},
+    #{courseName},
+    #{startDate},
+    #{endDate})
+  </insert>
+
+  <!-- 受講生情報更新 -->
+  <update id="updateStudent"
+    parameterType="student.manatement.StudentManegement.data.Student">
+    UPDATE student
+    SET
+    name = #{name},
+    name_kana = #{nameKana},
+    nickname = #{nickName},
+    email = #{email},
+    area = #{area},
+    age = #{age},
+    gender = #{gender},
+    remark = #{remark},
+    is_deleted = #{deleted}
+    WHERE student_id = #{studentId}
+      </update>
+
+  <!-- 受講生コース情報のコース名の更新 -->
+  <update id="updateStudentCourse"
+    parameterType="student.manatement.StudentManegement.data.StudentCourse">
+    UPDATE students_courses
+    SET
+    course_name = #{courseName}
+    WHERE courses_id = #{coursesId}
+  </update>
+
 </mapper>
