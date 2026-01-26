@@ -21,8 +21,6 @@ public interface StudentRepository {
    *
    * @return　受講生情報一覧（全件）
    */
-  @Select("""
-  SELECT student_id, name, name_kana, nickname, email, area, age, gender, remark, is_deleted AS deleted FROM student""")
   List<Student> search();
 
   /**
@@ -30,11 +28,7 @@ public interface StudentRepository {
    * @param studentId　受講生ID
    * @return　受講生
    */
-  @Select("""
-  SELECT student_id, name, name_kana, nickname, email, area, age, gender, remark, is_deleted AS deleted FROM student
-  WHERE student_id = #{studentId}
-""")
-  Student searchStudentId(String studentId);
+   Student searchStudentId(String studentId);
 
 
   /**
