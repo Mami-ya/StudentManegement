@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="student.manatement.StudentManegement.repository.StudentRepository">
 
   <!-- 受講生の全件検索 -->
@@ -36,14 +37,16 @@
   </select>
 
   <!-- 受講生のコース情報の全件検索 -->
-  <select id="searchStudentCourseList" resultType="student.manatement.StudentManegement.data.StudentCourse">
+  <select id="searchStudentCourseList"
+    resultType="student.manatement.StudentManegement.data.StudentCourse">
     SELECT *
     FROM
     students_courses
   </select>
 
   <!-- 受講生IDに紐づく受講生コース情報の検索 -->
-  <select id="searchStudentCourse" resultType="student.manatement.StudentManegement.data.StudentCourse">
+  <select id="searchStudentCourse"
+    resultType="student.manatement.StudentManegement.data.StudentCourse">
     SELECT *
     FROM
     students_courses
@@ -109,7 +112,7 @@
     remark = #{remark},
     is_deleted = #{deleted}
     WHERE student_id = #{studentId}
-      </update>
+  </update>
 
   <!-- 受講生コース情報のコース名の更新 -->
   <update id="updateStudentCourse"
