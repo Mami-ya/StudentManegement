@@ -5,6 +5,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
@@ -94,6 +95,19 @@ class StudentServiceTest {
     assertSame(studentDetail, actual);
   }
 
+  @Test
+  void 受講生詳細の登録＿初期化処理が行われていること() {
+    String studentId = "S001";
+    Student student = new Student();
+    student.setStudentId(studentId);
+    StudentCourse studentCourse = new StudentCourse();
+
+    sut.initStudentsCourse(studentCourse, student.getStudentId());
+
+    assertEquals(studentId,studentCourse.getStudentId());
+    assertEquals(LocalDateTime.now().getHour(), studentCourse. getStartDate().getHour());
+    assertEquals(LocalDateTime.now().plusYears(1).getYear(), studentCourse. getEndDate().getYear());
+  }
   @Test
   void 受講生詳細の更新＿リポジトリの処理が適切に呼び出されていること() {
     Student student = new Student();
