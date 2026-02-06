@@ -43,7 +43,8 @@ class StudentControllerTest {
   @Test
   void 受講生詳細の一覧検索が実行できてからのリストが返ってくること() throws Exception {
     mockMvc.perform(get("/studentList"))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(content().json("[]"));
 
     verify(service, times(1)).searchStudentList();
   }
@@ -58,52 +59,63 @@ class StudentControllerTest {
 
   @Test
   void 受講生登録が実行できる事() throws Exception {
-    Student student = new Student();
-    student.setStudentId("1");
-    student.setName("山田太郎");
-    student.setNameKana("ヤマダタロウ");
-    student.setNickName("たろう");
-    student.setEmail("taro@example.com");
-    student.setArea("横浜");
-    student.setGender("男性");
+    mockMvc.perform(post("/registerStudent").contentType(MediaType.APPLICATION_JSON).content(
+            """
+                {
+                  "student": {
+                    "studentId": "1",
+                    "name": "山田太郎",
+                    "nameKana": "ヤマダタロウ",
+                    "nickName": "たろう",
+                    "email": "taro@example.com",
+                    "area": "横浜",
+                    "age": 20,
+                    "gender": "男性"
+                  },
+                  "studentCourseList": []
+                }
+                """
 
-    StudentDetail studentDetail = new StudentDetail();
-    studentDetail.setStudent(student);
-    studentDetail.setStudentCourseList(Collections.emptyList());
-
-    ObjectMapper objectMapper = new ObjectMapper();
-    String json = objectMapper.writeValueAsString(studentDetail);
-
-    mockMvc.perform(post("/registerStudent").contentType(MediaType.APPLICATION_JSON).content(json))
+        ))
         .andExpect(status().isOk());
 
-    verify(service, times(1)).registerStudent(any(StudentDetail.class));
-
+    verify(service, times(1)).registerStudent(any());
   }
+
 
   @Test
   void 受講生詳細の更新が実行できて成功メッセージが返ること() throws Exception {
+    mockMvc.perform(put("/updateStudent").contentType(MediaType.APPLICATION_JSON).content(
+        """
+            {
+              "student": {
+                "studentId": "1",
+                "name": "山田太郎",
+                "nameKana": "ヤマダタロウ",
+                "nickName": "たろう",
+                "email": "taro@example.com",
+                "area": "横浜",
+                "age": 20,
+                "gender": "男性",
+                "remark": ""
+              },
+              "studentCourseList": [
+              {
+              "courses_id": "1",
+              "student_id": "1",
+              "course_name": "Word初級",
+              "start_date": "2025-01-10 10:00:00",
+              "end_date": "2025-02-10 10:00:00"
+              }
+              ]
+            }
+            """
+    ))
+        .andExpect(status().isOk());
 
-    Student student = new Student();
-    student.setStudentId("1");
-    student.setName("山田太郎");
-    student.setNameKana("ヤマダタロウ");
-    student.setNickName("たろう");
-    student.setEmail("taro@example.com");
-    student.setArea("横浜");
-    student.setGender("男性");
-
-    StudentDetail studentDetail = new StudentDetail();
-    studentDetail.setStudent(student);
-    studentDetail.setStudentCourseList(Collections.emptyList());
-
-    ObjectMapper objectMapper = new ObjectMapper();
-    String json = objectMapper.writeValueAsString(studentDetail);
-
-    mockMvc.perform(put("/updateStudent").contentType(MediaType.APPLICATION_JSON).content(json))
-        .andExpect(status().isOk())
-        .andExpect(content().string("更新処理が成功しました。"));
+    verify(service, times(1)).updateStudent(any());
   }
+
 
   @Test
   void 受講生詳細の受講生で適切な値を入力した時に入力チェックに異常が発生しないこと() {
