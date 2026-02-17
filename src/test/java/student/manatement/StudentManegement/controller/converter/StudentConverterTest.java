@@ -1,7 +1,9 @@
 package student.manatement.StudentManegement.controller.converter;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,62 +14,68 @@ import student.manatement.StudentManegement.domain.StudentDetail;
 
 class StudentConverterTest {
 
-  private StudentConverter converter;
+  private StudentConverter sut;
 
   @BeforeEach
   void before() {
-    converter = new StudentConverter();
+    sut = new StudentConverter();
   }
 
   @Test
-  void 受講生情報と受講生コース情報が紐づいていること() {
-    Student student1 = new Student();
-    student1.setStudentId("1");
+  void 受講生のリストと受講生コース情報のリストを渡して受講生詳細のリストが作成できる事() {
+    Student student = createStudent();
 
-    Student student2 = new Student();
-    student2.setStudentId("2");
-
-    List<Student> studentList = List.of(student1, student2);
-
-    StudentCourse course1 = new StudentCourse();
-    course1.setStudentId("1");
-    course1.setCourseName("Word初級");
-
-    StudentCourse course2 = new StudentCourse();
-    course2.setStudentId("2");
-    course2.setCourseName("Excel中級");
-
-    List<StudentCourse> studentCourseList = List.of(course1, course2);
-
-    List<StudentDetail> result = converter.convertStudentDetails(studentList, studentCourseList);
-
-    assertEquals(2, result.size());
-
-    StudentDetail studentDetail = result.get(0);
-    assertEquals("1", studentDetail.getStudent().getStudentId());
-    assertEquals(1, studentDetail.getStudentCourseList().size());
-    assertEquals("Word初級", studentDetail.getStudentCourseList().get(0).getCourseName());
-
-    StudentDetail studentDetail2 = result.get(1);
-    assertEquals("2", studentDetail2.getStudent().getStudentId());
-    assertEquals(1, studentDetail2.getStudentCourseList().size());
-    assertEquals("Excel中級", studentDetail2.getStudentCourseList().get(0).getCourseName());
-  }
-
-  @Test
-  void コース情報が存在しない学生の場合せも空のリストが作られる事() {
-    Student student = new Student();
-    student.setStudentId("3");
+    StudentCourse studentCourse = new StudentCourse();
+    studentCourse.setStudentId("1");
+    studentCourse.setCoursesId("1");
+    studentCourse.setCourseName("Word初級");
+    studentCourse.setStartDate(LocalDateTime.now());
+    studentCourse.setEndDate(LocalDateTime.now().plusYears(1));
 
     List<Student> studentList = List.of(student);
+    List<StudentCourse> studentCourseList = List.of(studentCourse);
 
-    List<StudentCourse> studentCourseList = List.of();
+    List<StudentDetail> actual = sut.convertStudentDetails(studentList, studentCourseList);
 
-    List<StudentDetail> result = converter.convertStudentDetails(studentList, studentCourseList);
+    assertThat(actual.get(0).getStudent()).isEqualTo(student);
+    assertThat(actual.get(0).getStudentCourseList()).isEqualTo(studentCourseList);
 
-    assertEquals(1, result.size());
-    assertEquals(0, result.get(0).getStudentCourseList().size());
+  }
+
+  @Test
+  void 受講生のリストと受講生コース情報のリストを渡したときに紐ずかない受講生コースは除外されること() {
+    Student student = createStudent();
+
+    StudentCourse studentCourse = new StudentCourse();
+    studentCourse.setStudentId("2");
+    studentCourse.setCoursesId("1");
+    studentCourse.setCourseName("Word初級");
+    studentCourse.setStartDate(LocalDateTime.now());
+    studentCourse.setEndDate(LocalDateTime.now().plusYears(1));
+
+    List<Student> studentList = List.of(student);
+    List<StudentCourse> studentCourseList = List.of(studentCourse);
+
+    List<StudentDetail> actual = sut.convertStudentDetails(studentList, studentCourseList);
+
+    assertThat(actual.get(0).getStudent()).isEqualTo(student);
+    assertThat(actual.get(0).getStudentCourseList()).isEmpty();
 
 
+  }
+
+  private static Student createStudent() {
+    Student student = new Student();
+    student.setStudentId("1");
+    student.setName("山田太郎");
+    student.setNameKana("ヤマダタロウ");
+    student.setNickName("たろう");
+    student.setEmail("taro@example.com");
+    student.setArea("横浜");
+    student.setAge(25);
+    student.setGender("男性");
+    student.setRemark("");
+    student.setDeleted(false);
+    return student;
   }
 }
